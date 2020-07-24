@@ -37,8 +37,8 @@ function mainMenu(person, people){
 
   switch(displayOption){
     case "info":
-    // TODO: get person's info
-    break;
+      displayPerson(person);
+      return mainMenu(person, people);
     case "family":
     // TODO: get person's family
     break;
@@ -85,46 +85,42 @@ function searchMultipleCriteria(people){
 
   switch(displayOption){
     case "gender":
-    // TODO: search by gender
-    break;
+      let userInput = promptFor("What is the person's gender?", chars).toLowerCase();
+      var filteredPeople =searchByCriteria(people, "gender", userInput)
+      return searchMultipleCriteria(filteredPeople)
     case "dob":
-    // TODO: get person's family
-    break;
+      let userInput = promptFor("What is the person's dob? (format of MM/DD/YYYY - don't include 0's!)", chars);
+      var filteredPeople =searchByCriteria(people, "dob", userInput)
+      return searchMultipleCriteria(filteredPeople)    
     case "height":
-    // TODO: get person's descendants
-    break;
+      let userInput = promptFor("What is the person's height? (rounded to nearest whole number)", chars).parseInt();
+      var filteredPeople =searchByCriteria(people, "height", userInput)
+      return searchMultipleCriteria(filteredPeople)
     case "weight":
-       //Filter list by weight
-    break;
+      let userInput = promptFor("What is the person's weight? (rounded to nearest whole number)", chars).parseInt();
+      var filteredPeople =searchByCriteria(people, "weight", userInput)
+      return searchMultipleCriteria(filteredPeople)
     case "eyecolor":
-      //param should be eyeColor
-         //Filter list by eyelor
-    break;
+      let userInput = promptFor("What is the person's eye color? (Black, brown, blue, green, or hazel)", chars).toLowerCase();
+      var filteredPeople =searchByCriteria(people, "eyeColor", userInput)
+      return searchMultipleCriteria(filteredPeople)
     case "occupation":
-          //Filter list by occupation
-    break;
+      let userInput = promptFor("What is the person's occupation", chars);
+      var filteredPeople =searchByCriteria(people, "occupation", userInput)
+      return searchMultipleCriteria(filteredPeople)    
     case "finish":
-          // TODO: return and display filtered array
-    break;
+      return displayPeople(people)       // TODO: return and display filtered array
     case "restart":
-    app(people); // restart
-    break;
+      return app(people); // restart
     case "quit":
-    return; // stop execution
+      return; // stop execution
     default:
-    return mainMenu(person, people); // ask again
+      return mainMenu(person, people); // ask again
 }
-//First switch case to select criteria
-//depending on criteria, can assign user input to that search criteria
-//verification of user input
-//filter by that quality and assign to result
-//give option to further filter, or to "finish" or "start over"
-//continue filtering until they finish
-//return filtered list(displayPeople)
 
-function searchByCriteria(people){
-  let filteredPeople = people.filterPeopleByCriteria(function(person, criteria){
-    if(person.criteria === criteria){
+function searchByCriteria(people, "criteria", userInput){
+  let filteredPeople = people.filterPeopleByCriteria(function(person){
+    if(person["criteria"] === userInput){
       return true;
     }
     else{
@@ -134,8 +130,6 @@ function searchByCriteria(people){
   return filteredPeople;
   //returns a list of all filtered people from bd
 }
-
-
   //take in critera from switch case
   //will filter our current db of people by that and assign to variable (new array)
   //will return that array to the main menu
@@ -155,6 +149,12 @@ function displayPerson(person){
   // height, weight, age, name, occupation, eye color.
   let personInfo = "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
+  personInfo += "Gender: " + person.gender + "\n";
+  personInfo += "Date of Birth: " + person.dob + "\n";
+  personInfo += "Eye Color: " + person.eyeColor + "\n";
+  personInfo += "Height: " + person.height + "\n";
+  personInfo += "Weight: " + person.weight + "\n";
+  personInfo += "Occupation: " + person.occupation + "\n";
   // TODO: finish getting the rest of the information to display
   alert(personInfo);
 }
@@ -176,3 +176,10 @@ function yesNo(input){
 function chars(input){
   return true; // default validation only
 }
+
+//Function for searching by descendants:
+//We take in a person and people, then will grab their specific id (person.id)
+//filter using Array.filter to sort by those that have a parent id that matched it (these are direct descendants)
+// iterate over each person in this array, grab their id, and again filter all people for parent id's that match this (descendants of descendants)
+//then combine that array with our original array
+//return this final array of all descendants
