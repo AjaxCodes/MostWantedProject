@@ -97,6 +97,7 @@ function searchMultipleCriteria(people){
        //Filter list by weight
     break;
     case "eyecolor":
+      //param should be eyeColor
          //Filter list by eyelor
     break;
     case "occupation":
@@ -121,7 +122,20 @@ function searchMultipleCriteria(people){
 //continue filtering until they finish
 //return filtered list(displayPeople)
 
-function filterPeopleByCriteria(criteria){
+function searchByCriteria(people){
+  let filteredPeople = people.filterPeopleByCriteria(function(person, criteria){
+    if(person.criteria === criteria){
+      return true;
+    }
+    else{
+      return false;
+    }
+  })
+  return filteredPeople;
+  //returns a list of all filtered people from bd
+}
+
+
   //take in critera from switch case
   //will filter our current db of people by that and assign to variable (new array)
   //will return that array to the main menu
