@@ -67,8 +67,17 @@ function searchByName(people){
       return false;
     }
   })
-  // TODO: find the person using the name they entered
-  return foundPerson;
+  if (foundPerson.length == 1){
+    var wantedPerson = foundPerson[0];
+    return wantedPerson;
+    //case where we find one individual matching criteria
+  }
+  else {
+    alert("Could not find that individual.  Please try your search again, or search by something other than name.");
+    return app(people);
+  }
+  //case where we have multiple or no individuals matching criteria
+  //Display error message, kick us back to main menu
 }
 
 // alerts a list of people
