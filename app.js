@@ -80,7 +80,56 @@ function searchByName(people){
   //Display error message, kick us back to main menu
 }
 
+function searchMultipleCriteria(people){
+  let displayOption = prompt("Please select your search criteria.  Valid search options include 'gender', 'dob', 'height', 'weight', 'eyecolor', or 'occupation'. Type the option you want, or 'finish' if you are finished searching.  Otherwise, type 'restart' or 'quit'").toLowerCase();
+
+  switch(displayOption){
+    case "gender":
+    // TODO: search by gender
+    break;
+    case "dob":
+    // TODO: get person's family
+    break;
+    case "height":
+    // TODO: get person's descendants
+    break;
+    case "weight":
+       //Filter list by weight
+    break;
+    case "eyecolor":
+         //Filter list by eyelor
+    break;
+    case "occupation":
+          //Filter list by occupation
+    break;
+    case "finish":
+          // TODO: return and display filtered array
+    break;
+    case "restart":
+    app(people); // restart
+    break;
+    case "quit":
+    return; // stop execution
+    default:
+    return mainMenu(person, people); // ask again
+}
+//First switch case to select criteria
+//depending on criteria, can assign user input to that search criteria
+//verification of user input
+//filter by that quality and assign to result
+//give option to further filter, or to "finish" or "start over"
+//continue filtering until they finish
+//return filtered list(displayPeople)
+
+function filterPeopleByCriteria(criteria){
+  //take in critera from switch case
+  //will filter our current db of people by that and assign to variable (new array)
+  //will return that array to the main menu
+}
+
 // alerts a list of people
+//Will use this for multi-search criteria to return list.
+//Can then display list (numbered) and allow folks to select 1 specific person
 function displayPeople(people){
   alert(people.map(function(person){
     return person.firstName + " " + person.lastName;
