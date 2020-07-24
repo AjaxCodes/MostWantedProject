@@ -128,16 +128,10 @@ function searchByCriteria(people, "criteria", userInput){
     }
   })
   return filteredPeople;
-  //returns a list of all filtered people from bd
+  //returns a list of all filtered people from db
 }
-  //take in critera from switch case
-  //will filter our current db of people by that and assign to variable (new array)
-  //will return that array to the main menu
 }
 
-// alerts a list of people
-//Will use this for multi-search criteria to return list.
-//Can then display list (numbered) and allow folks to select 1 specific person
 function displayPeople(people){
   alert(people.map(function(person){
     return person.firstName + " " + person.lastName;
@@ -176,10 +170,97 @@ function yesNo(input){
 function chars(input){
   return true; // default validation only
 }
-
 //Function for searching by descendants:
 //We take in a person and people, then will grab their specific id (person.id)
 //filter using Array.filter to sort by those that have a parent id that matched it (these are direct descendants)
 // iterate over each person in this array, grab their id, and again filter all people for parent id's that match this (descendants of descendants)
 //then combine that array with our original array
 //return this final array of all descendants
+function filterForDescendants(person, people){
+  let idToSearch = person.id;
+  //get direct descendants
+  let descendantArray  =  people.filter(function(person){
+    if(person.parents.contains(idToSearch)){
+      return true;
+    }
+    else{
+      return false;
+    }
+  })
+  if (descendantArray.length == 0)
+  {
+    alert("Could not find any descendants.  Please select a different option.");:
+    return mainMenu(person, people);
+  }
+  else {
+    for (var i = 0; i < descendantArray.length; i++){
+      //filterForDescendants(descendantArray[i], people)
+      //will filter each of these for descendants as well
+      //add to existing array
+    }
+  }
+}
+
+
+  function filterForSpouse(person, people){
+    if(person.spouse == null){
+      return "No spouse record in database"
+    }
+    else {
+    let idToSearch = person.id;
+    let spouseInfo = "Spouse: " + people.filterPeopleByCriteria(function(person){
+      if((person.spouse == (idToSearch)){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+    return spouseInfo;
+    //returns a list of all filtered people from db
+  }
+    }
+  }
+
+  function filterForParents(person, people){
+    if(person.parents.length == 0){
+      return "No record of parent in Db"
+    }
+    else { 
+      var result = "";
+      for (var i = 0; i < person.parents.length; i++){
+      let idToSearch = person.parents[i];
+      let parentInfo = "Parent: " + people.filterPeopleByCriteria(function(person){
+      if((person.id == (idToSearch)){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+    }
+    result += parentInfo + "\n";
+    //returns a list of all filtered people from db
+  }
+    }
+    return result;
+  }
+  function filterForSiblings(person, people){
+    if(person.parents.length == 0){
+      return "No record of Sibling in Db"
+    }
+    else {
+    let idToSearch = person.parents[0];
+    let spouseInfo = "Sibling: " + people.filterPeopleByCriteria(function(person){
+      if((person.spouse == (idToSearch)){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+    return spouseInfo;
+    //returns a list of all filtered people from db
+  }
+    }
+  }
