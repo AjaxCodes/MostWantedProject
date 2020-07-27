@@ -40,16 +40,16 @@ function mainMenu(person, people){
       displayPerson(person);
       return mainMenu(person, people);
     case "family":
-      searchForFamily(person, people)
+      searchForFamily(person, people);
       return mainMenu(person, people);
     case "descendants":
-    // TODO: get person's descendants
-    return mainMenu(person, people);
+      descendantRoutine(person, people);
+      return mainMenu(person, people);
     case "restart":
-    app(people); // restart
-    break;
+      app(people); // restart
+      break;
     case "quit":
-    return; // stop execution
+      return; // stop execution
     default:
     alert("Invalid input.  Please try your selection again.");
     return mainMenu(person, people); // ask again
@@ -191,41 +191,42 @@ function yesNo(input){
 function chars(input){
   return true; // default validation only
 }
-//Function for searching by descendants:
-//We take in a person and people, then will grab their specific id (person.id)
-//filter using Array.filter to sort by those that have a parent id that matched it (these are direct descendants)
-// iterate over each person in this array, grab their id, and again filter all people for parent id's that match this (descendants of descendants)
-//then combine that array with our original array
-//return this final array of all descendants
+
+function descendantRoutine(person, people){
+  var result = filterForDescendants(person, people);
+  if (result.length == 0)
+  {
+    alert("Could not find any known descendants.");
+    return mainMenu(person, people);
+  }
+  else {
+    for (var i = 0; i < result.length; i++){
+      var grandkidArray = filterForDescendants(result[i], people)
+      result = result.concat(grandkidArray);
+    }
+  }
+  alert(displayDescendants(result));
+}
+
 function filterForDescendants(person, people){
   let idToSearch = person.id;
-  //get direct descendants
-  let descendantArray  =  people.filter(function(person){
-    if(person.parents.contains(idToSearch)){
+  var filteredResults  =  people.filter(function(person){
+    if(person.parents.includes(idToSearch)){
       return true;
     }
     else{
       return false;
     }
   })
-  if (descendantArray.length == 0)
-  {
-    alert("Could not find any known descendants.");
-    return mainMenu(person, people);
-  }
-  else {
-    
-    for (var i = 0; i < descendantArray.length; i++){
-      //Will pull this for loop into another method
-      //First, with original person we will filter for descendants
-      //Next, outside of filter function we will do check to see if length == 0 (If it does, we say no descendants)
-      //Next, we will run for loop across this entire array
-      //Can use resultArray as param for this function, then within for loop add each to result array
-      //can use return on recursive call to avoid overstacking calls
-      //Can use resultArray.concat(descendantArray) <-----let's just use this one lol
+  return filteredResults;
+}
 
-    }
+function displayDescendants(resultArray){
+  var descendantString = "";
+  for(var i = 0; i < resultArray.length; i++){
+    descendantString += "Descendant: " + resultArray[i].firstName + " " + resultArray[i].lastName + "\n";
   }
+  return descendantString;
 }
 
 function searchForFamily(person, people){
