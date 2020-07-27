@@ -85,28 +85,28 @@ function searchMultipleCriteria(people){
 
   switch(displayOption){
     case "gender":
-      let userInput = promptFor("What is the person's gender?", chars).toLowerCase();
-      var filteredPeople =searchByCriteria(people, "gender", userInput)
+      let genderInput = promptFor("What is the person's gender?", chars).toLowerCase();
+      var filteredPeople =searchByCriteria(people, "gender", genderInput)
       return searchMultipleCriteria(filteredPeople)
     case "dob":
-      let userInput = promptFor("What is the person's dob? (format of MM/DD/YYYY - don't include 0's!)", chars);
-      var filteredPeople =searchByCriteria(people, "dob", userInput)
+      let dobInput = promptFor("What is the person's dob? (format of MM/DD/YYYY - don't include 0's!)", chars);
+      var filteredPeople =searchByCriteria(people, "dob", dobInput)
       return searchMultipleCriteria(filteredPeople)    
     case "height":
-      let userInput = promptFor("What is the person's height? (rounded to nearest whole number)", chars).parseInt();
-      var filteredPeople =searchByCriteria(people, "height", userInput)
+      let heightInput = promptFor("What is the person's height? (rounded to nearest whole number)", chars).parseInt();
+      var filteredPeople =searchByCriteria(people, "height", heightInput)
       return searchMultipleCriteria(filteredPeople)
     case "weight":
-      let userInput = promptFor("What is the person's weight? (rounded to nearest whole number)", chars).parseInt();
-      var filteredPeople =searchByCriteria(people, "weight", userInput)
+      let weightInput = promptFor("What is the person's weight? (rounded to nearest whole number)", chars).parseInt();
+      var filteredPeople =searchByCriteria(people, "weight", weightInput)
       return searchMultipleCriteria(filteredPeople)
     case "eyecolor":
-      let userInput = promptFor("What is the person's eye color? (Black, brown, blue, green, or hazel)", chars).toLowerCase();
-      var filteredPeople =searchByCriteria(people, "eyeColor", userInput)
+      let eyeColorInput = promptFor("What is the person's eye color? (Black, brown, blue, green, or hazel)", chars).toLowerCase();
+      var filteredPeople =searchByCriteria(people, "eyeColor", eyeColorInput)
       return searchMultipleCriteria(filteredPeople)
     case "occupation":
-      let userInput = promptFor("What is the person's occupation", chars);
-      var filteredPeople =searchByCriteria(people, "occupation", userInput)
+      let jobInput = promptFor("What is the person's occupation", chars);
+      var filteredPeople =searchByCriteria(people, "occupation", jobInput)
       return searchMultipleCriteria(filteredPeople)    
     case "finish":
       return displayPeople(people)       // TODO: return and display filtered array
@@ -118,9 +118,9 @@ function searchMultipleCriteria(people){
       return mainMenu(person, people); // ask again
 }
 
-function searchByCriteria(people, "criteria", userInput){
+function searchByCriteria(people, criteria, userInput){
   let filteredPeople = people.filterPeopleByCriteria(function(person){
-    if(person["criteria"] === userInput){
+    if(person[criteria] === userInput){
       return true;
     }
     else{
@@ -189,7 +189,7 @@ function filterForDescendants(person, people){
   })
   if (descendantArray.length == 0)
   {
-    alert("Could not find any descendants.  Please select a different option.");:
+    alert("Could not find any descendants.  Please select a different option.");
     return mainMenu(person, people);
   }
   else {
@@ -209,7 +209,7 @@ function filterForDescendants(person, people){
     else {
     let idToSearch = person.id;
     let spouseInfo = "Spouse: " + people.filterPeopleByCriteria(function(person){
-      if((person.spouse == (idToSearch)){
+      if(person.spouse == idToSearch){
         return true;
       }
       else{
@@ -220,7 +220,7 @@ function filterForDescendants(person, people){
     //returns a list of all filtered people from db
   }
     }
-  }
+  
 
   function filterForParents(person, people){
     if(person.parents.length == 0){
@@ -231,7 +231,7 @@ function filterForDescendants(person, people){
       for (var i = 0; i < person.parents.length; i++){
       let idToSearch = person.parents[i];
       let parentInfo = "Parent: " + people.filterPeopleByCriteria(function(person){
-      if((person.id == (idToSearch)){
+      if(person.id == idToSearch){
         return true;
       }
       else{
@@ -241,7 +241,6 @@ function filterForDescendants(person, people){
     }
     result += parentInfo + "\n";
     //returns a list of all filtered people from db
-  }
     }
     return result;
   }
@@ -252,7 +251,7 @@ function filterForDescendants(person, people){
     else {
     let idToSearch = person.parents[0];
     let spouseInfo = "Sibling: " + people.filterPeopleByCriteria(function(person){
-      if((person.spouse == (idToSearch)){
+      if(person.spouse == idToSearch){
         return true;
       }
       else{
@@ -261,6 +260,5 @@ function filterForDescendants(person, people){
     })
     return spouseInfo;
     //returns a list of all filtered people from db
-  }
     }
   }

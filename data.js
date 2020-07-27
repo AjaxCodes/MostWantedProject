@@ -1,5 +1,5 @@
 // You may modify this for testing purposes.
-const data = [
+const mostWanted = [
 	{
 		"id": 272822514,
 		"firstName": "Billy",
