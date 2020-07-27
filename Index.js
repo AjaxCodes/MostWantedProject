@@ -1,9 +1,5 @@
 "use strict"
-/*
-Build all of your functions for displaying and gathering information below (GUI).
-*/
 
-// app is the function called to start the entire application
 function app(people){
   let searchType = promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo).toLowerCase();
   let searchResults;
@@ -15,22 +11,17 @@ function app(people){
       searchResults = searchMultipleCriteria(people);
       break;
     default:
-    app(people); // restart app
+    app(people);
       break;
   }
-  
-  // Call the mainMenu function ONLY after you find the SINGLE person you are looking for
   mainMenu(searchResults, people);
 }
 
-// Menu function to call once you find who you are looking for
 function mainMenu(person, people){
-
-  /* Here we pass in the entire person object that we found in our search, as well as the entire original dataset of people. We need people in order to find descendants and other information that the user may want. */
 
   if(!person){
     alert("Could not find that individual.");
-    return app(people); // restart
+    return app(people);
   }
 
   let displayOption = prompt("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
@@ -71,14 +62,11 @@ function searchByName(people){
   if (foundPerson.length == 1){
     var wantedPerson = foundPerson[0];
     return wantedPerson;
-    //case where we find one individual matching criteria
   }
   else {
     alert("Could not find that individual.  Please try your search again, or search by something other than name.");
     return app(people);
   }
-  //case where we have multiple or no individuals matching criteria
-  //Display error message, kick us back to main menu
 }
 
 function searchMultipleCriteria(people){
@@ -112,7 +100,6 @@ function searchMultipleCriteria(people){
     case "results":
       displayPeople(people)
       return searchMultipleCriteria(people);
-      //add functionality to select by name one of these people, or to start over?
     case "restart":
       return app(people); // restart
     case "quit":
@@ -132,26 +119,22 @@ function searchByCriteria(people, criteria, userInput){
     }
   })
   return filteredPeople;
-  //returns a list of all filtered people from db
 }
 
 function assessSearchResults(people, searchResults){
   if (searchResults.length == 0){
     alert("no matches found.  Please try your search again.");
     return app(people)    
-    //case where no one matches search results
   }
   else if (searchResults.length == 1){
     alert("Database match found.");
     var wantedPerson = searchResults[0];
     return wantedPerson;
-    //case where we find one individual matching criteria
   }
   else {
     return searchMultipleCriteria(searchResults)
   }
 }
-//Check if the list is length 1 - if it is alert that we found a match, display mainmenu
 
 function displayPeople(people){
   alert(people.map(function(person){
@@ -160,8 +143,7 @@ function displayPeople(people){
 }
 
 function displayPerson(person){
-  // print all of the information about a person:
-  // height, weight, age, name, occupation, eye color.
+
   let personInfo = "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
   personInfo += "Gender: " + person.gender + "\n";
@@ -170,11 +152,9 @@ function displayPerson(person){
   personInfo += "Height: " + person.height + "\n";
   personInfo += "Weight: " + person.weight + "\n";
   personInfo += "Occupation: " + person.occupation + "\n";
-  // TODO: finish getting the rest of the information to display
   alert(personInfo);
 }
 
-// function that prompts and validates user input
 function promptFor(question, valid){
   do{
     var response = prompt(question).trim();
@@ -182,12 +162,10 @@ function promptFor(question, valid){
   return response;
 }
 
-// helper function to pass into promptFor to validate yes/no answers
 function yesNo(input){
   return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
 }
 
-// helper function to pass in as default promptFor validation
 function chars(input){
   return true; // default validation only
 }
@@ -236,7 +214,6 @@ function searchForFamily(person, people){
   alert(familyInfo);
 }
  
-//Creating master searchForFamily function - could also use .concat here!
 function filterForSpouse(person, people){
     if(person.currentSpouse == null){
       return "No record of spouse in database \n"
@@ -256,7 +233,6 @@ function filterForSpouse(person, people){
   }
 }
   
-//
   function filterForParents(person, people){
     if(person.parents.length == 0){
       return "No record of parent in database. \n"
@@ -278,7 +254,6 @@ function filterForSpouse(person, people){
     }
     return result;
   }
-
 
   function filterForSiblings(person, people){
     if(person.parents.length == 0){
@@ -306,8 +281,6 @@ function filterForSpouse(person, people){
 
       }
     }
-    //if this array is length 0, return no record
-    //else will iterate over it andconcat results w/ first and last name
     return result;
   }
   
