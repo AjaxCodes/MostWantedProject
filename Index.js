@@ -40,11 +40,11 @@ function mainMenu(person, people){
       displayPerson(person);
       return mainMenu(person, people);
     case "family":
-    // TODO: get person's family
-    break;
+      searchForFamily(person, people)
+      return mainMenu(person, people);
     case "descendants":
     // TODO: get person's descendants
-    break;
+    return mainMenu(person, people);
     case "restart":
     app(people); // restart
     break;
@@ -119,7 +119,7 @@ function searchMultipleCriteria(people){
       return; // stop execution
     default:
       return mainMenu(person, people); // ask again
-}
+  }
 }
 
 function searchByCriteria(people, criteria, userInput){
@@ -210,48 +210,39 @@ function filterForDescendants(person, people){
   })
   if (descendantArray.length == 0)
   {
-    alert("Could not find any descendants.  Please select a different option.");
+    alert("Could not find any known descendants.");
     return mainMenu(person, people);
   }
   else {
+    
     for (var i = 0; i < descendantArray.length; i++){
-      //filterForDescendants(descendantArray[i], people)
-      //will filter each of these for descendants as well
-      //add to existing array
+      //Will pull this for loop into another method
+      //First, with original person we will filter for descendants
+      //Next, outside of filter function we will do check to see if length == 0 (If it does, we say no descendants)
+      //Next, we will run for loop across this entire array
+      //Can use resultArray as param for this function, then within for loop add each to result array
+      //can use return on recursive call to avoid overstacking calls
+      //Can use resultArray.concat(descendantArray) <-----let's just use this one lol
+
     }
   }
 }
 
-
-  function filterForSpouse(person, people){
-    if(person.spouse == null){
-      return "No spouse record in database"
+function searchForFamily(person, people){
+  let familyInfo = filterForSpouse(person, people);
+  familyInfo += filterForParents(person, people);
+  familyInfo += filterForSiblings(person, people);
+  alert(familyInfo);
+}
+ 
+//Creating master searchForFamily function - could also use .concat here!
+function filterForSpouse(person, people){
+    if(person.currentSpouse == null){
+      return "No record of spouse in database \n"
     }
     else {
-    let idToSearch = person.id;
-    let spouseInfo = "Spouse: " + people.filterPeopleByCriteria(function(person){
-      if(person.spouse == idToSearch){
-        return true;
-      }
-      else{
-        return false;
-      }
-    })
-    return spouseInfo;
-    //returns a list of all filtered people from db
-  }
-    }
-  
-
-  function filterForParents(person, people){
-    if(person.parents.length == 0){
-      return "No record of parent in Db"
-    }
-    else { 
-      var result = "";
-      for (var i = 0; i < person.parents.length; i++){
-      let idToSearch = person.parents[i];
-      let parentInfo = "Parent: " + people.filterPeopleByCriteria(function(person){
+    let idToSearch = person.currentSpouse;
+    var spouseInfo = people.filter(function(person){
       if(person.id == idToSearch){
         return true;
       }
@@ -259,27 +250,63 @@ function filterForDescendants(person, people){
         return false;
       }
     })
-    }
-    result += parentInfo + "\n";
-    //returns a list of all filtered people from db
-    }
+    let result = "Spouse : " + spouseInfo[0].firstName + " " + spouseInfo[0].lastName + "\n";
     return result;
   }
-  function filterForSiblings(person, people){
+}
+  
+//
+  function filterForParents(person, people){
     if(person.parents.length == 0){
-      return "No record of Sibling in Db"
+      return "No record of parent in database. \n"
     }
-    else {
-    let idToSearch = person.parents[0];
-    let spouseInfo = "Sibling: " + people.filterPeopleByCriteria(function(person){
-      if(person.spouse == idToSearch){
+    else { 
+      var result = "";
+      for (var i = 0; i < person.parents.length; i++){
+      let idToSearch = person.parents[i];
+      let parentInfo = people.filter(function(person){
+      if(person.id == idToSearch){
         return true;
       }
       else{
         return false;
       }
     })
-    return spouseInfo;
-    //returns a list of all filtered people from db
+    result += "Parent: " + parentInfo[0].firstName + " " + parentInfo[0].lastName + "\n";
     }
+    }
+    return result;
   }
+
+
+  function filterForSiblings(person, people){
+    if(person.parents.length == 0){
+      return "No record of Sibling in database. \n"
+    }
+    else {
+      let idToSearch = person.parents[0];
+      var siblingInfo = people.filter(function(person){
+        if(person.parents[0] == idToSearch){
+          return true;
+        }
+        else{
+          return false;
+        }
+      })
+    }
+  
+    if (siblingInfo.length == 0){
+      return "No record of Sibling in database. \n"
+    }
+    else{
+      var result = "";
+      for (var i = 0; i < siblingInfo.length; i++){
+      result += "Sibling: " + siblingInfo[i].firstName + " " + siblingInfo[i].lastName + "\n";
+
+      }
+    }
+    //if this array is length 0, return no record
+    //else will iterate over it andconcat results w/ first and last name
+    return result;
+  }
+  
