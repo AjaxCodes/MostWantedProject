@@ -12,9 +12,9 @@ function app(people){
       searchResults = searchByName(people);
       break;
     case 'no':
-      // TODO: search by traits
+      searchResults = searchMultipleCriteria(people);
       break;
-      default:
+    default:
     app(people); // restart app
       break;
   }
@@ -51,13 +51,14 @@ function mainMenu(person, people){
     case "quit":
     return; // stop execution
     default:
+    alert("Invalid input.  Please try your selection again.");
     return mainMenu(person, people); // ask again
   }
 }
 
 function searchByName(people){
-  let firstName = promptFor("What is the person's first name?", chars);
-  let lastName = promptFor("What is the person's last name?", chars);
+  let firstName = promptFor("What is the person's first name? (Be sure to capitalize!)", chars);
+  let lastName = promptFor("What is the person's last name? (Be sure to capitalize!)", chars);
 
   let foundPerson = people.filter(function(person){
     if(person.firstName === firstName && person.lastName === lastName){
@@ -81,35 +82,37 @@ function searchByName(people){
 }
 
 function searchMultipleCriteria(people){
-  let displayOption = prompt("Please select your search criteria.  Valid search options include 'gender', 'dob', 'height', 'weight', 'eyecolor', or 'occupation'. Type the option you want, or 'finish' if you are finished searching.  Otherwise, type 'restart' or 'quit'").toLowerCase();
+  let displayOption = prompt("Please select your search criteria.  Valid search options include 'gender', 'dob', 'height', 'weight', 'eyecolor', or 'occupation'. Type the option you want, or 'results' to see a list of people matching current criteria.  Otherwise, type 'restart' or 'quit'").toLowerCase();
 
   switch(displayOption){
     case "gender":
       let genderInput = promptFor("What is the person's gender?", chars).toLowerCase();
       var filteredPeople =searchByCriteria(people, "gender", genderInput)
-      return searchMultipleCriteria(filteredPeople)
-    case "dob":
+      return assessSearchResults(people, filteredPeople)    
+      case "dob":
       let dobInput = promptFor("What is the person's dob? (format of MM/DD/YYYY - don't include 0's!)", chars);
       var filteredPeople =searchByCriteria(people, "dob", dobInput)
-      return searchMultipleCriteria(filteredPeople)    
+      return assessSearchResults(people, filteredPeople)    
     case "height":
-      let heightInput = promptFor("What is the person's height? (rounded to nearest whole number)", chars).parseInt();
+      let heightInput = parseInt(promptFor("What is the person's height? (rounded to nearest whole number)", chars));
       var filteredPeople =searchByCriteria(people, "height", heightInput)
-      return searchMultipleCriteria(filteredPeople)
+      return assessSearchResults(people, filteredPeople)    
     case "weight":
-      let weightInput = promptFor("What is the person's weight? (rounded to nearest whole number)", chars).parseInt();
+      let weightInput = parseInt(promptFor("What is the person's weight? (rounded to nearest whole number)", chars));
       var filteredPeople =searchByCriteria(people, "weight", weightInput)
-      return searchMultipleCriteria(filteredPeople)
+      return assessSearchResults(people, filteredPeople)    
     case "eyecolor":
       let eyeColorInput = promptFor("What is the person's eye color? (Black, brown, blue, green, or hazel)", chars).toLowerCase();
       var filteredPeople =searchByCriteria(people, "eyeColor", eyeColorInput)
-      return searchMultipleCriteria(filteredPeople)
+      return assessSearchResults(people, filteredPeople)    
     case "occupation":
       let jobInput = promptFor("What is the person's occupation", chars);
-      var filteredPeople =searchByCriteria(people, "occupation", jobInput)
-      return searchMultipleCriteria(filteredPeople)    
-    case "finish":
-      return displayPeople(people)       // TODO: return and display filtered array
+      var filteredPeople = searchByCriteria(people, "occupation", jobInput)
+      return assessSearchResults(people, filteredPeople)    
+    case "results":
+      displayPeople(people)
+      return searchMultipleCriteria(people);
+      //add functionality to select by name one of these people, or to start over?
     case "restart":
       return app(people); // restart
     case "quit":
@@ -117,9 +120,10 @@ function searchMultipleCriteria(people){
     default:
       return mainMenu(person, people); // ask again
 }
+}
 
 function searchByCriteria(people, criteria, userInput){
-  let filteredPeople = people.filterPeopleByCriteria(function(person){
+  let filteredPeople = people.filter(function(person){
     if(person[criteria] === userInput){
       return true;
     }
@@ -130,7 +134,24 @@ function searchByCriteria(people, criteria, userInput){
   return filteredPeople;
   //returns a list of all filtered people from db
 }
+
+function assessSearchResults(people, searchResults){
+  if (searchResults.length == 0){
+    alert("no matches found.  Please try your search again.");
+    return app(people)    
+    //case where no one matches search results
+  }
+  else if (searchResults.length == 1){
+    alert("Database match found.");
+    var wantedPerson = searchResults[0];
+    return wantedPerson;
+    //case where we find one individual matching criteria
+  }
+  else {
+    return searchMultipleCriteria(searchResults)
+  }
 }
+//Check if the list is length 1 - if it is alert that we found a match, display mainmenu
 
 function displayPeople(people){
   alert(people.map(function(person){
